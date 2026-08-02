@@ -3,6 +3,8 @@
 <title>State of the MCP Registry</title>
 <meta name=description content="Measured health of the official Model Context Protocol registry: 10,716 endpoints probed. About half answer, ~a quarter unusable, 86% on the current protocol.">
 <style>
+.corr{border-left:3px solid #d29922;padding:.6rem .9rem;margin:1rem 0;font-size:.92em;opacity:.92;background:rgba(210,153,34,.06)}
+
 :root{color-scheme:light dark}
 body{max-width:760px;margin:0 auto;padding:2rem 1.2rem;font:16px/1.6 -apple-system,system-ui,sans-serif;background:#0d1117;color:#e6edf3}
 h1{font-size:1.9rem;margin:0 0 .2rem} h2{margin-top:2.4rem;font-size:1.25rem;border-bottom:1px solid #30363d;padding-bottom:.3rem}
@@ -39,9 +41,11 @@ a{color:#58a6ff}
 <p><strong>8,629</strong> tools across a random sample of 476 live servers (≈194,260+ ecosystem-wide). Only <strong>18%</strong> declare an output contract — the rest return whatever they return. <strong>46%</strong> of servers expose at least one tool pair an agent could plausibly confuse.</p>
 
 <h2>Contracts drift, and it clusters</h2>
-<p><strong>4.4%</strong> of servers changed a tool contract within 36 hours; only 3 more in the next 36. Drift is not a steady rate — it is a small set of servers that never stop moving, plus a frozen majority. A server can be perfectly up and no longer do what your agent learned it does.</p>
+<p><strong>4.4%</strong> of servers changed a tool contract within 36 hours; only 3 more in the next 36. A server can be perfectly up and no longer do what your agent learned it does.</p>
+<p class=corr><strong>Correction, 2026-08-02.</strong> This section previously read &ldquo;a small set of servers that never stop moving, plus a frozen majority.&rdquo; That over-claims what two 36-hour windows can show. Quiet across our windows is quiet; <em>frozen</em> is a much stronger claim, and we cannot distinguish a server that never moves from one that moved before our first snapshot. If drift is bursty per server rather than steady, 21-then-3 is the shape you would see even if no server were permanently stable. The numbers are unchanged; the interpretation was wrong. Raised by <a href="https://dev.to/anp2network">@anp2network</a>.</p>
 
 <footer>
 Method: every active remote entry in <code>registry.modelcontextprotocol.io</code>, deduplicated by URL, sent one anonymous JSON-RPC <code>initialize</code> (transport-aware; SSE handled). Tool figures from a seeded random sample so re-runs are comparable. Full method and per-finding write-ups: <a href="https://dev.to/theopslog">The Ops Log</a>. This page is regenerated from live data; single snapshots are moments, not truth.
+<p><strong>Known limits of this sample, stated because you cannot check them yourself.</strong> The drift series re-measures a fixed seeded sample drawn from servers that answered on <strong>2026-07-30</strong>. That has two consequences we would rather you knew than discovered. Servers registered after that date have never been sampled, and servers that were down that day are permanently excluded — so as time passes this measures an ageing cohort rather than the registry as it stands. And because the sample is fixed, every figure here describes those servers, not the ecosystem, whenever the two have drifted apart. We are refreshing the population and holding a permanent control slice so the two can be compared rather than conflated; until that ships, read every drift number as <em>cohort</em>, not <em>ecosystem</em>.</p>
 </footer>
 </body></html>
