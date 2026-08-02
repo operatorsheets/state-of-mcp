@@ -1,0 +1,47 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>State of the MCP Registry</title>
+<meta name=description content="Measured health of the official Model Context Protocol registry: 10,716 endpoints probed. About half answer, ~a quarter unusable, 86% on the current protocol.">
+<style>
+:root{color-scheme:light dark}
+body{max-width:760px;margin:0 auto;padding:2rem 1.2rem;font:16px/1.6 -apple-system,system-ui,sans-serif;background:#0d1117;color:#e6edf3}
+h1{font-size:1.9rem;margin:0 0 .2rem} h2{margin-top:2.4rem;font-size:1.25rem;border-bottom:1px solid #30363d;padding-bottom:.3rem}
+.sub{color:#8b949e;margin-top:0} .big{font-size:2.6rem;font-weight:700;color:#58a6ff}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+td,th{padding:.45rem .6rem;border-bottom:1px solid #21262d;text-align:left}
+th{color:#8b949e;font-weight:600} .n{text-align:right;font-variant-numeric:tabular-nums}
+.flag{color:#f85149} .ok{color:#3fb950}
+code{background:#161b22;padding:.1rem .35rem;border-radius:4px;font-size:.9em}
+footer{margin-top:3rem;color:#8b949e;font-size:.85rem;border-top:1px solid #30363d;padding-top:1rem}
+a{color:#58a6ff}
+</style></head><body>
+<h1>State of the MCP Registry</h1>
+<p class=sub>An independent, measured snapshot of the official Model Context Protocol registry. Data current as of 2026-07-30 to 08-02. Numbers are from live probes, not estimates.</p>
+
+<h2>How much of it actually works</h2>
+<p><span class=big>50%</span> of the <strong>10,716</strong> active remote endpoints answer an anonymous MCP handshake.</p>
+<table><tr><th>Result</th><th class=n>Endpoints</th><th class=n>Share</th></tr>
+<tr><td class=ok>Answers anonymously</td><td class=n>5,346</td><td class=n>49.9%</td></tr>
+<tr><td>Auth-gated (alive, needs a key)</td><td class=n>2,643</td><td class=n>24.7%</td></tr>
+<tr><td class=flag>Genuinely broken (dead host / 404 / timeout)</td><td class=n>2,039</td><td class=n>19.0%</td></tr>
+<tr><td>Other (redirects, 429, odd responses)</td><td class=n>688</td><td class=n>6.4%</td></tr></table>
+<p>The widely-repeated claim that "half of MCP is dead" traces to an April 2026 study of a broader, wild-crawled population. It does not describe the curated registry today: only <strong>19%</strong> are genuinely dead.</p>
+
+<h2>Failure concentrates by hosting platform</h2>
+<p>Reachability tracks whether the hostname was ever meant to be permanent, not code quality.</p>
+<table><tr><th>Host</th><th class=n>Endpoints</th><th class=n>Failing</th></tr><tr><td>vercel.app</td><td class=n>198</td><td class=n>8%</td></tr><tr><td>workers.dev</td><td class=n>327</td><td class=n>24%</td></tr><tr><td>fly.dev</td><td class=n>68</td><td class=n>43%</td></tr><tr><td>onrender.com</td><td class=n>164</td><td class=n>52%</td></tr><tr><td>railway.app</td><td class=n>297</td><td class=n>66%</td></tr><tr><td>smithery.ai</td><td class=n>217</td><td class=n>88%</td></tr><tr><td>trycloudflare.com</td><td class=n>84</td><td class=n>100%</td></tr></table>
+
+<h2>Protocol adoption</h2>
+<p><strong>86%</strong> run the current protocol. The ecosystem is newer than it is abandoned.</p>
+<table><tr><th>Protocol version</th><th class=n>Servers</th><th class=n>Share</th></tr><tr><td>2025-06-18</td><td class=n>411</td><td class=n>86%</td></tr><tr><td>2024-11-05</td><td class=n>46</td><td class=n>10%</td></tr><tr><td>2025-03-26</td><td class=n>14</td><td class=n>3%</td></tr><tr><td>2025-11-25</td><td class=n>5</td><td class=n>1%</td></tr></table>
+
+<h2>The tool surface</h2>
+<p><strong>8,629</strong> tools across a random sample of 476 live servers (≈194,260+ ecosystem-wide). Only <strong>18%</strong> declare an output contract — the rest return whatever they return. <strong>46%</strong> of servers expose at least one tool pair an agent could plausibly confuse.</p>
+
+<h2>Contracts drift, and it clusters</h2>
+<p><strong>4.4%</strong> of servers changed a tool contract within 36 hours; only 3 more in the next 36. Drift is not a steady rate — it is a small set of servers that never stop moving, plus a frozen majority. A server can be perfectly up and no longer do what your agent learned it does.</p>
+
+<footer>
+Method: every active remote entry in <code>registry.modelcontextprotocol.io</code>, deduplicated by URL, sent one anonymous JSON-RPC <code>initialize</code> (transport-aware; SSE handled). Tool figures from a seeded random sample so re-runs are comparable. Full method and per-finding write-ups: <a href="https://dev.to/theopslog">The Ops Log</a>. This page is regenerated from live data; single snapshots are moments, not truth.
+</footer>
+</body></html>
