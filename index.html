@@ -141,7 +141,23 @@ Method: every active remote entry in <code>registry.modelcontextprotocol.io</cod
         method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:u,include_tools:true})});
       if(r.status===429){show('gated','Rate limited',['You have run several checks in a minute. Wait 60 seconds and try again.'],'');return;}
       var d=await r.json();
-      if(d.error){show('down','Could not probe that URL',[esc(d.error)],'');return;}
+      if(d.error){
+        // The worker returns {error:'http_530'} etc for unreachable hosts. That bare code is
+        // useless to the person who most needs the answer, so translate it and keep the CTA.
+        var AUD0='<a href="%%AUDIT%%">Full written audit — $19</a>';
+        var m=String(d.error).match(/^http_(\d+)$/);
+        if(m||/dns|timeout|tls|conn/i.test(String(d.error))){
+          show('down','Not reachable from outside',
+            [m?('The host answered <b>HTTP '+m[1]+'</b> to an anonymous <code>initialize</code>.')
+               :('The probe failed with <b>'+esc(d.error)+'</b>.'),
+             'A client discovering you through the registry gets this same dead end.',
+             'Common causes: the deployment moved and the registry entry was not republished, a path change (<code>/mcp</code> vs <code>/</code>), or a host that sleeps on a free tier.',
+             'If this is a self-hosted template URL, failing is expected — paste a live instance instead.'], AUD0);
+        } else if(String(d.error)==='host_not_public'){
+          show('down','That host is not publicly routable',['We only probe public hosts. Localhost and private ranges are refused.'],'');
+        } else { show('down','Could not probe that URL',[esc(d.error)],AUD0); }
+        return;
+      }
       var noOut=(d.tools||[]).filter(function(t){return !t.outputSchema;}).length;
       var AUD='<a href="https://buy.polar.sh/polar_cl_dJDVvt2BD0xkbTR7zZAY5Xr1lPfLvHprJvghl2ylGvV">Full written audit — $19</a>';
       if(d.status==='up'){
