@@ -76,6 +76,18 @@ a{color:#58a6ff}
 <li><a href="data/">method and known limits</a>.</li>
 </ul>
 
+<h2>Correction: self-hosted template URLs (2026-08-03)</h2>
+<p>Self-hosted servers publish registry URLs the deployer fills in
+(<code>https://{coder_hostname}/...</code>, <code>myPlatform.jfrog.github.io</code>). Those
+entries are correct and are <em>supposed</em> to fail a probe — but our census counted them
+as broken. Strictly matched, <b>97 of the 2,039 entries we classed broken are templates
+(0.91% of the registry)</b>, so our broken figure is overstated by that much: 19.0% becomes
+<b>18.1%</b>, and the headline "about a quarter unusable" becomes ~24.5%.</p>
+<p>The error is small in aggregate and concentrated exactly where it hurts: templates are how
+self-hosted enterprise software ships, so the false positives cluster among the
+best-known projects. Fixed in the probe — templates now class as
+<code>self_hosted_template</code>, and auth codes (401/403/402/429) count as alive.</p>
+
 <h2>Get your server audited</h2>
 <p>We run this probe suite against individual servers, by request, and write up what we find:
 reachability from outside, registry-entry health (active / latest / URL match), anonymous auth
