@@ -15,6 +15,18 @@ th{color:#8b949e;font-weight:600} .n{text-align:right;font-variant-numeric:tabul
 .sub2{font-weight:400;color:#8b949e;font-size:.85em}
 .flag{color:#f85149} .ok{color:#3fb950}
 code{background:#161b22;padding:.1rem .35rem;border-radius:4px;font-size:.9em}
+.chk{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.chk input{flex:1;min-width:260px;padding:.6rem .8rem;border-radius:8px;border:1px solid #30363d;
+ background:#0d1117;color:#e6edf3;font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
+.chk button{padding:.6rem 1.2rem;border-radius:8px;border:0;background:#238636;color:#fff;
+ font-weight:600;cursor:pointer;font-size:14px}
+.chk button:disabled{opacity:.55;cursor:default}
+#cr{margin:.5rem 0 0}
+#cr .res{border:1px solid #30363d;border-radius:10px;padding:.9rem 1.1rem;background:#161b22}
+#cr .up{border-color:#238636} #cr .gated{border-color:#9e6a03} #cr .down{border-color:#f85149}
+#cr h4{margin:0 0 .4rem;font-size:1rem}
+#cr ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:.9rem;color:#c9d1d9}
+#cr .cta{margin-top:.7rem;font-size:.9rem}
 footer{margin-top:3rem;color:#8b949e;font-size:.85rem;border-top:1px solid #30363d;padding-top:1rem}
 a{color:#58a6ff}
 </style></head><body>
@@ -88,6 +100,16 @@ self-hosted enterprise software ships, so the false positives cluster among the
 best-known projects. Fixed in the probe — templates now class as
 <code>self_hosted_template</code>, and auth codes (401/403/402/429) count as alive.</p>
 
+<h2 id=check>Check your own server, free</h2>
+<p>Paste the URL clients connect to. We send one real anonymous <code>initialize</code> from
+outside your network and tell you what a stranger sees — the same probe used for all 10,716
+entries on this page. Nothing is stored.</p>
+<div class=chk>
+  <input id=cu type=url placeholder="https://yourhost.com/mcp" spellcheck=false autocomplete=off>
+  <button id=cb>Check</button>
+</div>
+<div id=cr></div>
+
 <h2>Get your server audited</h2>
 <p>We run this probe suite against individual servers, by request, and write up what we find:
 reachability from outside, registry-entry health (active / latest / URL match), anonymous auth
@@ -101,4 +123,50 @@ padding:.55rem 1.1rem;border-radius:8px;text-decoration:none;font-weight:600">Or
 Method: every active remote entry in <code>registry.modelcontextprotocol.io</code>, deduplicated by URL, sent one anonymous JSON-RPC <code>initialize</code> (transport-aware; SSE handled). Tool figures from a seeded random sample so re-runs are comparable. Full method and per-finding write-ups: <a href="https://dev.to/theopslog">The Ops Log</a>. This page is regenerated from live data; single snapshots are moments, not truth.
 <p><strong>Known limits of this sample, stated because you cannot check them yourself.</strong> The drift series re-measures a fixed seeded sample drawn from servers that answered on <strong>2026-07-30</strong>. That has two consequences we would rather you knew than discovered. Servers registered after that date have never been sampled, and servers that were down that day are permanently excluded — so as time passes this measures an ageing cohort rather than the registry as it stands. And because the sample is fixed, every figure here describes those servers, not the ecosystem, whenever the two have drifted apart. That refresh has since shipped: every run now draws a fresh CURRENT sample from the live registry alongside the fixed CONTROL slice, and the two are reported separately above &mdash; so read any figure labelled CONTROL as <em>cohort</em> and CURRENT as <em>ecosystem</em>. The tool-surface section above still carries pre-refresh sample figures and is flagged where it does.</p>
 </footer>
+<script>
+(function(){
+  var i=document.getElementById('cu'), b=document.getElementById('cb'), out=document.getElementById('cr');
+  function esc(s){return String(s==null?'':s).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
+  function show(cls,title,lines,cta){
+    out.innerHTML='<div class="res '+cls+'"><h4>'+title+'</h4>'+
+      (lines.length?'<ul><li>'+lines.join('</li><li>')+'</li></ul>':'')+
+      (cta?'<div class=cta>'+cta+'</div>':'')+'</div>';
+  }
+  async function run(){
+    var u=(i.value||'').trim();
+    if(!/^https:\/\//i.test(u)){show('down','Needs an https:// URL',['Paste the full endpoint, e.g. https://yourhost.com/mcp'],'');return;}
+    b.disabled=true; b.textContent='Checking…'; out.innerHTML='';
+    try{
+      var r=await fetch('https://mcp-uptime.theopslog.workers.dev/v1/check',{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:u,include_tools:true})});
+      if(r.status===429){show('gated','Rate limited',['You have run several checks in a minute. Wait 60 seconds and try again.'],'');return;}
+      var d=await r.json();
+      if(d.error){show('down','Could not probe that URL',[esc(d.error)],'');return;}
+      var noOut=(d.tools||[]).filter(function(t){return !t.outputSchema;}).length;
+      var AUD='<a href="https://buy.polar.sh/polar_cl_dJDVvt2BD0xkbTR7zZAY5Xr1lPfLvHprJvghl2ylGvV">Full written audit — $19</a>';
+      if(d.status==='up'){
+        var L=['Answers an anonymous <code>initialize</code> (HTTP '+esc(d.httpStatus)+', '+esc(d.latencyMs)+'ms)'];
+        if(d.protocolVersion) L.push('Protocol <code>'+esc(d.protocolVersion)+'</code>');
+        if(d.server&&d.server.name) L.push('Server <code>'+esc(d.server.name)+'</code> v'+esc(d.server.version));
+        if(d.toolCount) L.push('<b>'+esc(d.toolCount)+'</b> tools exposed');
+        if(noOut) L.push('<b>'+noOut+'</b> of them declare no <code>outputSchema</code> — callers cannot predict the return shape');
+        show('up','Reachable and healthy', L,
+          'Registry entry, auth surface, tool-contract drift and hosting durability are not covered here. '+AUD);
+      } else if(String(d.httpStatus).match(/^(401|402|403|429)$/)){
+        show('gated','Alive, but gated',
+          ['HTTP '+esc(d.httpStatus)+' to an anonymous client — the host is up and speaking, it just needs credentials.',
+           'Anyone finding you through the registry hits this with no in-band hint about how to get access.'], AUD);
+      } else {
+        show('down','Not reachable from outside',
+          ['Status <b>'+esc(d.status)+'</b>'+(d.httpStatus?' (HTTP '+esc(d.httpStatus)+')':'')+', transport '+esc(d.transport)+'.',
+           'Common causes: the deployment moved and the registry entry was not republished, a path change (<code>/mcp</code> vs <code>/</code>), or a host that sleeps.',
+           'If this is a self-hosted template URL, that is expected — paste a live instance instead.'], AUD);
+      }
+    }catch(e){ show('down','Check failed',['Could not reach the probe service. Try again shortly.'],''); }
+    finally{ b.disabled=false; b.textContent='Check'; }
+  }
+  b.addEventListener('click',run);
+  i.addEventListener('keydown',function(e){if(e.key==='Enter')run();});
+})();
+</script>
 </body></html>
