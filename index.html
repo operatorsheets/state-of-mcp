@@ -56,6 +56,26 @@ a{color:#58a6ff}
 <tr><td>Tools carrying <code>annotations</code></td><td class=n>77.5%</td><td class=n>76.6%</td></tr></table>
 <p>The reachability gap is structural rather than decay: CONTROL was <em>defined</em> as servers that answer anonymously, so it cannot contain the auth-gated half of the registry. What we did not expect is that the same selection barely moves schema hygiene — 17.9% against 16.6%. <strong>Selection bias is not one number you apply to a dataset.</strong> It wrecks the claims that correlate with the selection criterion and leaves the rest standing, so "most tools declare no output contract" survives intact while "this describes the registry" did not.</p>
 
+<h2>When a server moves, does the new address work?</h2>
+<p>The registry deletes almost nothing — of 10,716 URLs censused on 7/30, exactly <strong>one</strong> was removed within three days. The rest of the churn is <em>supersession</em>: the same server name publishing a newer version at a different URL. It is tempting to read that as servers moving rather than dying. So we probed both ends of every superseded pair on 2026-08-03.</p>
+<p><span class=big>56%</span> of superseded servers&rsquo; <strong>new</strong> endpoints answer <code>tools/list</code> — against <strong>54%</strong> for a fresh random draw from the registry the same day. A migrated server is <em>not</em> measurably more likely to work than any other entry.</p>
+<table><tr><th>448 superseded servers, by name</th><th class=n>Servers</th><th class=n>Share</th></tr>
+<tr><td>Old endpoint dead, successor live <span class=sub2>&mdash; genuine migration</span></td><td class=n>172</td><td class=n>38.4%</td></tr>
+<tr><td class=flag>Dead at both ends</td><td class=n>186</td><td class=n>41.5%</td></tr>
+<tr><td>Live at both ends</td><td class=n>78</td><td class=n>17.4%</td></tr>
+<tr><td class=flag>Was live, successor dead</td><td class=n>12</td><td class=n>2.7%</td></tr></table>
+<p><strong>42% are dead at both ends.</strong> The registry shows a tidy migration to a live-looking entry and nothing at either address answers. Registry freshness is not a health signal: a server that just cut a release and updated its entry is a project someone touched recently, and that does not predict a working endpoint.</p>
+<p class=corr><strong>Correction, 2026-08-03.</strong> We previously wrote that what a naive diff reads as dead servers is <em>mostly servers that moved</em>. They moved in the registry; 42% of the time the place they moved to is dead too. &ldquo;Superseded&rdquo; describes a database row, not a server that went on working somewhere else. The claim that the registry deletes essentially nothing stands unchanged &mdash; that was about bookkeeping, and the bookkeeping is accurate.</p>
+<p>One caveat we cannot design away: successors are resolved through the registry&rsquo;s <code>name</code> field, which is authored by the same operator whose endpoint broke. The stronger witness is contract continuity &mdash; does the new endpoint serve the tool set the old one did &mdash; and we hold a pre-move contract for only 4 pairs, far too few to quote as a rate. Raised by <a href="https://dev.to/anp2network">@anp2network</a>.</p>
+
+<h2>The data</h2>
+<p>Every figure above comes from files you can download and re-walk. A claim about our own carefulness is worth less than an input a stranger can check.</p>
+<ul>
+<li><a href="data/census-2026-07-30.json">census-2026-07-30.json</a> &mdash; the full-registry sweep, all 10,716 URLs with health class and status.</li>
+<li><a href="data/successor-probe-20260803.json">successor-probe-20260803.json</a> &mdash; every superseded pair, both ends probed, plus the raw result for all 1,217 URLs.</li>
+<li><a href="data/">method and known limits</a>.</li>
+</ul>
+
 <h2>Get your server audited</h2>
 <p>We run this probe suite against individual servers, by request, and write up what we find:
 reachability from outside, registry-entry health (active / latest / URL match), anonymous auth
@@ -67,6 +87,6 @@ padding:.55rem 1.1rem;border-radius:8px;text-decoration:none;font-weight:600">Or
 
 <footer>
 Method: every active remote entry in <code>registry.modelcontextprotocol.io</code>, deduplicated by URL, sent one anonymous JSON-RPC <code>initialize</code> (transport-aware; SSE handled). Tool figures from a seeded random sample so re-runs are comparable. Full method and per-finding write-ups: <a href="https://dev.to/theopslog">The Ops Log</a>. This page is regenerated from live data; single snapshots are moments, not truth.
-<p><strong>Known limits of this sample, stated because you cannot check them yourself.</strong> The drift series re-measures a fixed seeded sample drawn from servers that answered on <strong>2026-07-30</strong>. That has two consequences we would rather you knew than discovered. Servers registered after that date have never been sampled, and servers that were down that day are permanently excluded — so as time passes this measures an ageing cohort rather than the registry as it stands. And because the sample is fixed, every figure here describes those servers, not the ecosystem, whenever the two have drifted apart. We are refreshing the population and holding a permanent control slice so the two can be compared rather than conflated; until that ships, read every drift number as <em>cohort</em>, not <em>ecosystem</em>.</p>
+<p><strong>Known limits of this sample, stated because you cannot check them yourself.</strong> The drift series re-measures a fixed seeded sample drawn from servers that answered on <strong>2026-07-30</strong>. That has two consequences we would rather you knew than discovered. Servers registered after that date have never been sampled, and servers that were down that day are permanently excluded — so as time passes this measures an ageing cohort rather than the registry as it stands. And because the sample is fixed, every figure here describes those servers, not the ecosystem, whenever the two have drifted apart. That refresh has since shipped: every run now draws a fresh CURRENT sample from the live registry alongside the fixed CONTROL slice, and the two are reported separately above &mdash; so read any figure labelled CONTROL as <em>cohort</em> and CURRENT as <em>ecosystem</em>. The tool-surface section above still carries pre-refresh sample figures and is flagged where it does.</p>
 </footer>
 </body></html>
