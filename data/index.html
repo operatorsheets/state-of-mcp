@@ -1,0 +1,58 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Raw data — State of the MCP Registry</title>
+<meta name=description content="The measurement files behind the State of the MCP Registry page: the full 7/30 registry census and the 8/3 successor probe, with method and known limits.">
+<style>
+:root{color-scheme:light dark}
+body{max-width:760px;margin:0 auto;padding:2rem 1.2rem;font:16px/1.6 -apple-system,system-ui,sans-serif;background:#0d1117;color:#e6edf3}
+h1{font-size:1.7rem;margin:0 0 .2rem} h2{margin-top:2.2rem;font-size:1.2rem;border-bottom:1px solid #30363d;padding-bottom:.3rem}
+.sub{color:#8b949e;margin-top:0}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+td,th{padding:.45rem .6rem;border-bottom:1px solid #21262d;text-align:left;vertical-align:top}
+th{color:#8b949e;font-weight:600}
+code{background:#161b22;padding:.1rem .35rem;border-radius:4px;font-size:.9em}
+a{color:#58a6ff} li{margin:.3rem 0}
+footer{margin-top:3rem;color:#8b949e;font-size:.85rem;border-top:1px solid #30363d;padding-top:1rem}
+</style></head><body>
+<h1>Raw data</h1>
+<p class=sub>Every figure on the <a href="../">State of the MCP Registry</a> page comes from these
+files. They are published so the arithmetic can be re-walked by someone who does not trust it,
+which is the only version of &ldquo;carefully measured&rdquo; that is worth anything.</p>
+
+<table><tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="census-2026-07-30.json">census-2026-07-30.json</a><br><small>1.27 MB</small></td>
+<td>Full-registry sweep, 2026-07-30. All 10,716 active-latest remote URLs, each with a health
+class and HTTP status. This is the baseline every later comparison is anchored to.</td></tr>
+<tr><td><a href="successor-probe-20260803.json">successor-probe-20260803.json</a><br><small>830 KB</small></td>
+<td>The successor probe, 2026-08-03. For every 7/30 URL that was no longer the active-latest
+entry on 8/2, both the old endpoint and its current successor probed in the same run. Contains
+the resolved pairs, the full 2&times;2, the four contract-continuity rows, and the raw probe
+result for all 1,217 URLs.</td></tr>
+</table>
+
+<h2>Method</h2>
+<p>Endpoints are probed anonymously over HTTP with an MCP <code>initialize</code> handshake
+(protocolVersion <code>2025-06-18</code>) followed by <code>tools/list</code>. A server counts as
+answering only if <code>tools/list</code> returns a result. Servers requiring credentials return
+401 and are counted as not answering &mdash; the right reading for &ldquo;can a caller use
+this&rdquo;, the wrong one for &ldquo;does this server exist&rdquo;. Both readings are
+recoverable from the per-URL error codes in the files.</p>
+
+<h2>Known limits</h2>
+<ul>
+<li>Anonymous probes only. Auth-gated servers are indistinguishable from broken ones.</li>
+<li>Single observation window per run. A 503 may be a deploy, not a death.</li>
+<li>Successor resolution uses the registry&rsquo;s <code>name</code> field, which is
+self-declared by the operator whose endpoint moved. Contract continuity &mdash; the stronger
+witness &mdash; could only be checked for 4 pairs, and is reported as individual rows rather
+than a rate.</li>
+<li>Counting unit matters: some servers register many versions at trivially different URLs
+(one gateway appears 76 times, differing only in a query string). Figures are deduplicated to
+distinct server name unless stated otherwise.</li>
+</ul>
+
+<footer>
+Questions and corrections: <a href="https://dev.to/theopslog">@theopslog on dev.to</a>.
+Plain-text version of this page: <a href="README.md">README.md</a>.
+</footer>
+</body></html>
