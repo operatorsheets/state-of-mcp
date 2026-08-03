@@ -39,7 +39,7 @@ a{color:#58a6ff}
 <table><tr><th>Protocol version</th><th class=n>Servers</th><th class=n>Share</th></tr><tr><td>2025-06-18</td><td class=n>411</td><td class=n>86%</td></tr><tr><td>2024-11-05</td><td class=n>46</td><td class=n>10%</td></tr><tr><td>2025-03-26</td><td class=n>14</td><td class=n>3%</td></tr><tr><td>2025-11-25</td><td class=n>5</td><td class=n>1%</td></tr></table>
 
 <h2>The tool surface</h2>
-<p><strong>8,629</strong> tools across a random sample of 476 live servers (≈194,260+ ecosystem-wide). Only <strong>18%</strong> declare an output contract — the rest return whatever they return. <strong>46%</strong> of servers expose at least one tool pair an agent could plausibly confuse.</p>
+<p><strong>8,639</strong> tools across a random sample of 476 live servers (≈194,480+ ecosystem-wide). Only <strong>18%</strong> declare an output contract — the rest return whatever they return. <strong>46%</strong> of servers expose at least one tool pair an agent could plausibly confuse.</p>
 <p class=corr><strong>Read this section as describing anonymously-reachable servers, not the registry.</strong> These figures come from the pre-2026-08-02 sample, which was drawn from servers that answered anonymously on 7/30. See <em>What our own sample was getting wrong</em> below for how large that distortion is — substantial for reachability, small for the schema-declaration rates quoted here.</p>
 
 <h2>Contracts drift, and it clusters</h2>
@@ -55,6 +55,15 @@ a{color:#58a6ff}
 <tr><td>Tools declaring <code>outputSchema</code></td><td class=n>17.9%</td><td class=n>15.4%</td></tr>
 <tr><td>Tools carrying <code>annotations</code></td><td class=n>77.2%</td><td class=n>76.7%</td></tr></table>
 <p>The reachability gap is structural rather than decay: CONTROL was <em>defined</em> as servers that answer anonymously, so it cannot contain the auth-gated half of the registry. What we did not expect is that the same selection barely moves schema hygiene — 17.9% against 15.4%. <strong>Selection bias is not one number you apply to a dataset.</strong> It wrecks the claims that correlate with the selection criterion and leaves the rest standing, so "most tools declare no output contract" survives intact while "this describes the registry" did not.</p>
+
+<h2>Get your server audited</h2>
+<p>We run this probe suite against individual servers, by request, and write up what we find:
+reachability from outside, registry-entry health (active / latest / URL match), anonymous auth
+surface, tool-contract drift, and hosting durability. Written report within 48 hours; if
+nothing is wrong, the report says so. <b>$19, one-time.</b></p>
+<p><a href="https://buy.polar.sh/polar_cl_dJDVvt2BD0xkbTR7zZAY5Xr1lPfLvHprJvghl2ylGvV" style="display:inline-block;background:#238636;color:#fff;
+padding:.55rem 1.1rem;border-radius:8px;text-decoration:none;font-weight:600">Order an audit
+— $19</a></p>
 
 <footer>
 Method: every active remote entry in <code>registry.modelcontextprotocol.io</code>, deduplicated by URL, sent one anonymous JSON-RPC <code>initialize</code> (transport-aware; SSE handled). Tool figures from a seeded random sample so re-runs are comparable. Full method and per-finding write-ups: <a href="https://dev.to/theopslog">The Ops Log</a>. This page is regenerated from live data; single snapshots are moments, not truth.
