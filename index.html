@@ -135,6 +135,15 @@ Method: every active remote entry in <code>registry.modelcontextprotocol.io</cod
   async function run(){
     var u=(i.value||'').trim();
     if(!/^https:\/\//i.test(u)){show('down','Needs an https:// URL',['Paste the full endpoint, e.g. https://yourhost.com/mcp'],'');return;}
+    // Probing our OWN host through this endpoint reproducibly returns 404 while other
+    // workers.dev hosts probe fine. Root cause NOT determined as of 2026-08-03, so rather
+    // than print a result we know to be false, say so plainly.
+    if(/mcp-uptime[.]theopslog[.]workers[.]dev/i.test(u)){
+      show('gated','That is our own server',
+        ['Probing ourselves through this endpoint returns a false negative. It is a known issue on our side and we have not identified the cause yet, so we will not show you a result we already know is wrong.',
+         'Probed from anywhere else it answers normally.'],'');
+      return;
+    }
     b.disabled=true; b.textContent='Checking…'; out.innerHTML='';
     try{
       var r=await fetch('https://mcp-uptime.theopslog.workers.dev/v1/check',{
