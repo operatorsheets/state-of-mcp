@@ -71,15 +71,15 @@ a{color:#58a6ff}
 <h2>What our own sample was getting wrong</h2>
 <p>Until 2026-08-02 every tool-surface figure here came from a sample drawn from servers that answered an <em>anonymous</em> handshake on 7/30 — a survivor set, presented as a sample of the registry. A reader (<a href="https://dev.to/anp2network">@anp2network</a>) pushed on the sampling and we went looking. We now probe two cohorts every run and never merge them.</p>
 <table><tr><th></th><th class=n>CONTROL<br><span class=sub2>7/30 responders</span></th><th class=n>CURRENT<br><span class=sub2>live registry draw</span></th></tr>
-<tr><td>Answers <code>tools/list</code></td><td class=n>94%</td><td class=n>54%</td></tr>
-<tr><td>Current protocol</td><td class=n>85%</td><td class=n>84%</td></tr>
-<tr><td>Tools declaring <code>outputSchema</code></td><td class=n>17.9%</td><td class=n>16.6%</td></tr>
-<tr><td>Tools carrying <code>annotations</code></td><td class=n>77.5%</td><td class=n>76.6%</td></tr></table>
-<p>The reachability gap is structural rather than decay: CONTROL was <em>defined</em> as servers that answer anonymously, so it cannot contain the auth-gated half of the registry. What we did not expect is that the same selection barely moves schema hygiene — 17.9% against 16.6%. <strong>Selection bias is not one number you apply to a dataset.</strong> It wrecks the claims that correlate with the selection criterion and leaves the rest standing, so "most tools declare no output contract" survives intact while "this describes the registry" did not.</p>
+<tr><td>Answers <code>tools/list</code></td><td class=n>94%</td><td class=n>49%</td></tr>
+<tr><td>Current protocol</td><td class=n>85%</td><td class=n>83%</td></tr>
+<tr><td>Tools declaring <code>outputSchema</code></td><td class=n>17.9%</td><td class=n>17.8%</td></tr>
+<tr><td>Tools carrying <code>annotations</code></td><td class=n>78.5%</td><td class=n>72.1%</td></tr></table>
+<p>The reachability gap is structural rather than decay: CONTROL was <em>defined</em> as servers that answer anonymously, so it cannot contain the auth-gated half of the registry. What we did not expect is that the same selection barely moves schema hygiene — 17.9% against 17.8%. <strong>Selection bias is not one number you apply to a dataset.</strong> It wrecks the claims that correlate with the selection criterion and leaves the rest standing, so "most tools declare no output contract" survives intact while "this describes the registry" did not.</p>
 
 <h2>When a server moves, does the new address work?</h2>
 <p>The registry deletes almost nothing — of 10,716 URLs censused on 7/30, exactly <strong>one</strong> was removed within three days. The rest of the churn is <em>supersession</em>: the same server name publishing a newer version at a different URL. It is tempting to read that as servers moving rather than dying. So we probed both ends of every superseded pair on 2026-08-03.</p>
-<p><span class=big>56%</span> of superseded servers&rsquo; <strong>new</strong> endpoints answer <code>tools/list</code> — against <strong>54%</strong> for a fresh random draw from the registry the same day. A migrated server is <em>not</em> measurably more likely to work than any other entry.</p>
+<p><span class=big>56%</span> of superseded servers&rsquo; <strong>new</strong> endpoints answer <code>tools/list</code> — against <strong>49%</strong> for a fresh random draw from the registry the same day. A migrated server is <em>not</em> measurably more likely to work than any other entry.</p>
 <table><tr><th>448 superseded servers, by name</th><th class=n>Servers</th><th class=n>Share</th></tr>
 <tr><td>Old endpoint dead, successor live <span class=sub2>&mdash; genuine migration</span></td><td class=n>172</td><td class=n>38.4%</td></tr>
 <tr><td class=flag>Dead at both ends</td><td class=n>186</td><td class=n>41.5%</td></tr>
