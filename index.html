@@ -109,6 +109,25 @@ self-hosted enterprise software ships, so the false positives cluster among the
 best-known projects. Fixed in the probe — templates now class as
 <code>self_hosted_template</code>, and auth codes (401/403/402/429) count as alive.</p>
 
+<h2 id=data>The raw data</h2>
+<p>Every figure on this page comes from one file, and the file is here:
+<a href="census-2026-07-30.csv"><b>census-2026-07-30.csv</b></a> &mdash; all 10,716 URLs,
+1.4&nbsp;MB. One row per endpoint: the URL, its host, the raw probe class, the HTTP status,
+which bucket we put it in, whether we flagged it a self-hosted template, and its registry
+status as of 2026-08-02.</p>
+<p>This is published because a reader has no way to tell a number that was corrected under
+pressure from one nobody ever checked. Our corrections are real, but "trust our discipline"
+is not evidence. The file is. Re-derive anything here, or disagree with how we bucketed it
+&mdash; the <code>probe_class</code> column is the raw observation and <code>bucket</code>
+is our interpretation of it, kept in separate columns precisely so you can throw ours away.</p>
+<table><tr><th>bucket</th><th>n</th><th>share</th></tr>
+<tr><td>answers an anonymous <code>initialize</code></td><td>5,332</td><td>49.8%</td></tr>
+<tr><td>alive but gated (401/403/402/429)</td><td>2,617</td><td>24.4%</td></tr>
+<tr><td>advertises a URL that does not work</td><td>1,942</td><td>18.1%</td></tr>
+<tr><td>other (redirects, 400, odd responses)</td><td>648</td><td>6.0%</td></tr>
+<tr><td>self-hosted template &mdash; correct entry, expected to fail</td><td>177</td><td>1.7%</td></tr>
+</table>
+
 <h2 id=check>Check your own server, free</h2>
 <p>Paste the URL clients connect to. We send one real anonymous <code>initialize</code> from
 outside your network and tell you what a stranger sees — the same probe used for all 10,716
