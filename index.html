@@ -138,16 +138,41 @@ entries on this page. Nothing is stored.</p>
 </div>
 <div id=cr></div>
 
-<h2>Get your server audited</h2>
-<p>We run this probe suite against individual servers, by request, and write up what we find:
-reachability from outside, registry-entry health (active / latest / URL match), anonymous auth
-surface, tool-contract drift, and hosting durability. Written report within 48 hours; if
-nothing is wrong, the report says so. <b>$19, one-time.</b></p>
-<p><a href="https://buy.polar.sh/polar_cl_dJDVvt2BD0xkbTR7zZAY5Xr1lPfLvHprJvghl2ylGvV" style="display:inline-block;background:#238636;color:#fff;
-padding:.55rem 1.1rem;border-radius:8px;text-decoration:none;font-weight:600">Order an audit
-— $19</a></p>
+<h2>Working with us</h2>
+<p>We probe every server in the official registry on a schedule, publish the numbers, and
+publish our corrections when we get them wrong. Three ways to use that:</p>
 
-<footer>
+<table>
+<tr><th>Free</th><td><b>Ask us to check your server.</b> Open an issue on any of our public
+threads, or reply to one we opened on yours. You get the same probe we run across all 10,716
+entries — reachability, registry-entry health, auth surface, tool contract — and the answer
+even when the answer is "nothing is wrong." No charge, no signup.</td></tr>
+
+<tr><th>$19</th><td><b>Written audit, 48 hours.</b> The full probe against one server, written
+up: reachability from outside, registry status (active / latest / URL match), anonymous auth
+surface behaviour, tool-contract and outputSchema coverage, hosting durability. If we find
+nothing, the report says so.<br>
+<a href="https://buy.polar.sh/polar_cl_dJDVvt2BD0xkbTR7zZAY5Xr1lPfLvHprJvghl2ylGvV" style="display:inline-block;margin-top:.5rem;background:#238636;
+color:#fff;padding:.45rem .9rem;border-radius:8px;text-decoration:none;font-weight:600">Order
+an audit — $19</a></td></tr>
+
+<tr><th>Engineering</th><td><b>Building, fixing, or monitoring an MCP server in production.</b>
+We operate one: SSRF-guarded, multi-tenant auth, per-IP and per-plan rate limiting,
+streamable-HTTP and SSE, contract-drift detection, published to the official registry. We also
+hold failure-mode data from probing every server in it — we know how these break because we
+measured it.<br>
+Relevant if you are exposing tools to agents and cannot afford them to fail quietly. Scope and
+rates by conversation — <a href="https://github.com/theopslog">open an issue or reach us on
+GitHub</a>.</td></tr>
+</table>
+
+<p style="color:#8b949e;font-size:.9rem">Two findings that apply to nearly every server we
+measure, free to act on: <b>only 16.8%</b> of the 11,533 tools we surveyed declare an
+<code>outputSchema</code>, so callers cannot predict return shape; and <b>16.2%</b> of
+answering servers negotiate a protocol older than 2025-06-18 — which fails silently, because
+the handshake still succeeds.</p>
+
+<footer><footer>
 Method: every active remote entry in <code>registry.modelcontextprotocol.io</code>, deduplicated by URL, sent one anonymous JSON-RPC <code>initialize</code> (transport-aware; SSE handled). Tool figures from a seeded random sample so re-runs are comparable. Full method and per-finding write-ups: <a href="https://dev.to/theopslog">The Ops Log</a>. This page is regenerated from live data; single snapshots are moments, not truth.
 <p><strong>Known limits of this sample, stated because you cannot check them yourself.</strong> The drift series re-measures a fixed seeded sample drawn from servers that answered on <strong>2026-07-30</strong>. That has two consequences we would rather you knew than discovered. Servers registered after that date have never been sampled, and servers that were down that day are permanently excluded — so as time passes this measures an ageing cohort rather than the registry as it stands. And because the sample is fixed, every figure here describes those servers, not the ecosystem, whenever the two have drifted apart. That refresh has since shipped: every run now draws a fresh CURRENT sample from the live registry alongside the fixed CONTROL slice, and the two are reported separately above &mdash; so read any figure labelled CONTROL as <em>cohort</em> and CURRENT as <em>ecosystem</em>. The tool-surface section above still carries pre-refresh sample figures and is flagged where it does.</p>
 </footer>
