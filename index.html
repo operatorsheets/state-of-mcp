@@ -71,11 +71,11 @@ a{color:#58a6ff}
 <h2>What our own sample was getting wrong</h2>
 <p>Until 2026-08-02 every tool-surface figure here came from a sample drawn from servers that answered an <em>anonymous</em> handshake on 7/30 — a survivor set, presented as a sample of the registry. A reader (<a href="https://dev.to/anp2network">@anp2network</a>) pushed on the sampling and we went looking. We now probe two cohorts every run and never merge them.</p>
 <table><tr><th></th><th class=n>CONTROL<br><span class=sub2>7/30 responders</span></th><th class=n>CURRENT<br><span class=sub2>live registry draw</span></th></tr>
-<tr><td>Answers <code>tools/list</code></td><td class=n>94%</td><td class=n>54%</td></tr>
-<tr><td>Current protocol</td><td class=n>85%</td><td class=n>87%</td></tr>
-<tr><td>Tools declaring <code>outputSchema</code></td><td class=n>17.6%</td><td class=n>20.6%</td></tr>
-<tr><td>Tools carrying <code>annotations</code></td><td class=n>77.0%</td><td class=n>74.9%</td></tr></table>
-<p>The reachability gap is structural rather than decay: CONTROL was <em>defined</em> as servers that answer anonymously, so it cannot contain the auth-gated half of the registry. Schema hygiene is the interesting contrast: the two cohorts are <em>not distinguishable</em> on it — 17.6% against 20.6% (6813 vs 3618 tools across 376 vs 215 servers; clustered by server, p = 0.77). <strong>Selection bias is not one number you apply to a dataset.</strong> It wrecks the claims that correlate with the selection criterion and leaves the rest standing, so "most tools declare no output contract" survives intact while "this describes the registry" did not.</p>
+<tr><td>Answers <code>tools/list</code></td><td class=n>94%</td><td class=n>53%</td></tr>
+<tr><td>Current protocol</td><td class=n>85%</td><td class=n>83%</td></tr>
+<tr><td>Tools declaring <code>outputSchema</code></td><td class=n>17.7%</td><td class=n>10.9%</td></tr>
+<tr><td>Tools carrying <code>annotations</code></td><td class=n>76.9%</td><td class=n>70.3%</td></tr></table>
+<p>The reachability gap is structural rather than decay: CONTROL was <em>defined</em> as servers that answer anonymously, so it cannot contain the auth-gated half of the registry. Schema hygiene is the interesting contrast: the two cohorts are <em>not distinguishable</em> on it — 17.7% against 10.9% (6762 vs 4366 tools across 374 vs 207 servers; clustered by server, p = 0.13). <strong>Selection bias is not one number you apply to a dataset.</strong> It wrecks the claims that correlate with the selection criterion and leaves the rest standing, so "most tools declare no output contract" survives intact while "this describes the registry" did not.</p>
 
 <h2>When a server moves, does the new address work?</h2>
 <p>The registry deletes almost nothing — of 10,716 URLs censused on 7/30, exactly <strong>one</strong> was removed within three days. The rest of the churn is <em>supersession</em>: the same server name publishing a newer version at a different URL. It is tempting to read that as servers moving rather than dying. So we probed both ends of every superseded pair on 2026-08-03.</p>
